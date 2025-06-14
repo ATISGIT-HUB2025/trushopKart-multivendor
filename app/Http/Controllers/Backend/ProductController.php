@@ -18,6 +18,7 @@ use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProductLicenceKey;
+use App\Models\ProductAttribute;
 use Str;
 
 class ProductController extends Controller
@@ -105,6 +106,120 @@ class ProductController extends Controller
         // $product->play_store_link = $request->play_store_link;
         $product->save();
 
+        //     $platforms = [
+        //     'android' => ['a', 'b', 'c'],
+        //     'ios' => ['a', 'b', 'c', 'd', 'e', 'f'],
+        //   ];
+
+        // $textAttributes = [
+        //     'heading' => 'text',
+        // ];
+
+        // foreach ($platforms as $platform => $features) {
+        //     // Heading
+        //     $field = "best_protectIon_{$platform}_heading";
+        //     $textAttributes[$field] = 'text';
+
+        //     // Features
+        //     foreach ($features as $feature) {
+        //         $textAttributes["best_protectIon_{$platform}__{$feature}_title"] = 'text';
+        //         $textAttributes["best_protectIon_{$platform}__{$feature}_desc"] = 'html';
+        //     }
+        // }
+
+        
+
+        // foreach ($textAttributes as $field => $type) {
+        //     if ($request->filled($field)) {
+        //         ProductAttribute::create([
+        //             'product_id' => $product->id,
+        //             'name' => $field,
+        //             'type' => $type,
+        //             'value' => $request->input($field),
+        //         ]);
+        //     }
+        // }
+
+        // Define platforms and features
+            $platforms = [
+                'android' => ['a', 'b', 'c'],
+                'ios' => ['a', 'b', 'c', 'd', 'e', 'f'],
+            ];
+
+            // Init text fields
+            $textAttributes = [];
+
+            // Best Protection
+            foreach ($platforms as $platform => $features) {
+                $textAttributes["best_protectIon_{$platform}_heading"] = 'text';
+                foreach ($features as $feature) {
+                    $textAttributes["best_protectIon_{$platform}__{$feature}_title"] = 'text';
+                    $textAttributes["best_protectIon_{$platform}__{$feature}_desc"] = 'html';
+                }
+            }
+
+            // ✅ Add Cyber-Security fields
+            foreach ($platforms as $platform => $features) {
+                $textAttributes["cyber_security_title_{$platform}"] = 'text';
+                foreach ($features as $feature) {
+                    $textAttributes["cyber_security_{$platform}_{$feature}_title"] = 'text';
+                    $textAttributes["cyber_security_{$platform}_{$feature}_desc"] = 'html';
+                }
+            }
+            
+            // ✅ Add Footer Product Info (Single Feature)
+            $textAttributes["footer_main_title_product"] = 'text';
+            $textAttributes["footer_sub_title_product"] = 'text';
+            $textAttributes["footer_desc_product"] = 'html';
+
+            // Save text/html fields
+            foreach ($textAttributes as $field => $type) {
+                if ($request->filled($field)) {
+                    ProductAttribute::create([
+                        'product_id' => $product->id,
+                        'name' => $field,
+                        'type' => $type,
+                        'value' => $request->input($field),
+                    ]);
+                }
+            }
+
+        // ✅ Add System Requirements fields
+            $systemReqPlatforms = ['android', 'ios'];
+            foreach ($systemReqPlatforms as $platform) {
+                $textAttributes["system_req_title_{$platform}"] = 'text';
+                $textAttributes["system_req_operating_system_{$platform}"] = 'text';
+                $textAttributes["system_req_desc_{$platform}"] = 'html';
+            }
+
+            // ✅ Store text/html attributes
+            foreach ($textAttributes as $field => $type) {
+                if ($request->filled($field)) {
+                    ProductAttribute::create([
+                        'product_id' => $product->id,
+                        'name' => $field,
+                        'type' => $type,
+                        'value' => $request->input($field),
+                    ]);
+                }
+            }
+        // Image fields
+        foreach ($platforms as $platform => $features) {
+            foreach ($features as $feature) {
+                $field = "best_protectIon_{$platform}_icon_{$feature}";
+                if ($request->hasFile($field)) {
+                    $path = $this->uploadImage($request, $field, 'uploads');
+                    ProductAttribute::create([
+                        'product_id' => $product->id,
+                        'name' => $field,
+                        'type' => 'image',
+                        'value' => $path,
+                    ]);
+                }
+            }
+        }
+
+
         toastr('Created Successfully!', 'success');
 
         return redirect()->route('admin.products.index');
@@ -134,7 +249,9 @@ class ProductController extends Controller
         $childCategories = ChildCategory::where('sub_category_id', $product->sub_category_id)->get();
         $categories = Category::all();
         $brands = Brand::all();
-        return view('admin.product.edit', compact('product', 'categories', 'brands', 'subCategories', 'childCategories'));
+        $attributes = ProductAttribute::where('product_id', $product->id)->pluck('value', 'name')->toArray();
+     ///   return $attributes;
+        return view('admin.product.edit', compact('attributes','product', 'categories', 'brands', 'subCategories', 'childCategories'));
     }
 
     /**
