@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('press_release', function (Blueprint $table) {
-            $table->id();
-            $table->text('title')->nullable();
-             $table->text('short_desc')->nullable();
-             $table->text('image')->nullable();
-             $table->boolean('status')->default(1);
-            $table->timestamps();
-        });
+        // Schema::create('press_release', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->text('title')->nullable();
+        //      $table->text('short_desc')->nullable();
+        //      $table->text('image')->nullable();
+        //      $table->boolean('status')->default(1);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('press_release');
+       // Schema::dropIfExists('press_release');
     }
 };

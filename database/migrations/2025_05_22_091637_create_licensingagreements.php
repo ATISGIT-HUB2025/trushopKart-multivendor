@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('licensingagreements', function (Blueprint $table) {
-            $table->id();
-             $table->text('title')->nullable();
-             $table->boolean('status')->default(1);
-            $table->timestamps();
-        });
+        // Schema::create('licensingagreements', function (Blueprint $table) {
+        //     $table->id();
+        //      $table->text('title')->nullable();
+        //      $table->boolean('status')->default(1);
+        //     $table->timestamps();
+        // });
     }
 
     /**
