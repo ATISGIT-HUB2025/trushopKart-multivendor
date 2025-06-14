@@ -1,0 +1,126 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: fff;
+}
+
+/* first row  */
+
+.result_top_box {
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 0; /* Remove space between inline-block elements */
+}
+
+.logo-container {
+    display: inline-block;
+    width: 25%;
+    vertical-align: middle;
+    font-size: 16px; /* Reset font size */
+}
+
+.text-container {
+    display: inline-block;
+    width: 75%;
+    vertical-align: middle;
+
+    font-size: 16px; /* Reset font size */
+}
+
+.logo-container img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin-top: 25px;
+    margin-left: 20px;
+}
+
+.managed-by {
+    color: red;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 0;
+    display: block;
+}
+
+.academy-name {
+    text-transform: uppercase;
+    margin-top: 10px;
+    text-align: center;
+    display: block;
+}
+
+
+
+
+/* second  */
+
+.student_info {
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.student_info table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.student_info th {
+    width: 150px;
+    background-color: #fff;
+}
+
+.student_info td {
+    padding: 8px;
+}
+
+.student_info td:nth-child(2) {
+    width: 30px;
+    text-align: center;
+}
+
+/* For longer fields that span multiple columns */
+.student_info td[colspan="4"] {
+    width: auto;
+}
+
+
+
+
+/* third part */
+
+.student_result {
+    border: 1px solid red;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.student_result table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.student_result th,
+.student_result td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.student_result th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .student_result table {
+        display: block;
+        overflow-x: auto;
+    }
+}
