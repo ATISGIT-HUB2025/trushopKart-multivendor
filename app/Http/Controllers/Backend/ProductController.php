@@ -304,6 +304,87 @@ class ProductController extends Controller
         // $product->app_store_link = $request->app_store_link;
         // $product->play_store_link = $request->play_store_link;
         $product->save();
+
+         // ✅ Platforms & Features
+        $platforms = [
+            'android' => ['a', 'b', 'c'],
+            'ios' => ['a', 'b', 'c', 'd', 'e', 'f'],
+        ];
+          $textAttributes = [];
+             // Best Protection & Cyber Security Attributes
+        foreach ($platforms as $platform => $features) {
+            $textAttributes["best_protectIon_{$platform}_heading"] = 'text';
+            $textAttributes["cyber_security_title_{$platform}"] = 'text';
+
+            foreach ($features as $feature) {
+                // Best Protection
+                $textAttributes["best_protectIon_{$platform}__{$feature}_title"] = 'text';
+                $textAttributes["best_protectIon_{$platform}__{$feature}_desc"] = 'html';
+
+                // Cyber Security
+                $textAttributes["cyber_security_{$platform}_{$feature}_title"] = 'text';
+                $textAttributes["cyber_security_{$platform}_{$feature}_desc"] = 'html';
+            }
+        }
+        // Footer Product Info
+        $textAttributes["footer_main_title_product"] = 'text';
+        $textAttributes["footer_sub_title_product"] = 'text';
+        $textAttributes["footer_desc_product"] = 'html';
+
+         // System Requirements
+        foreach (['android', 'ios'] as $platform) {
+            $textAttributes["system_req_title_{$platform}"] = 'text';
+            $textAttributes["system_req_operating_system_{$platform}"] = 'text';
+            $textAttributes["system_req_desc_{$platform}"] = 'html';
+        }
+           // ✅ Sync Attributes
+            $existingAttributes = $product->attributes()->pluck('id', 'name')->toArray();
+
+            foreach ($textAttributes as $field => $type) {
+                if ($request->filled($field)) {
+                    $data = [
+                        'product_id' => $product->id,
+                        'name' => $field,
+                        'type' => $type,
+                        'value' => $request->input($field),
+                    ];
+
+                    if (isset($existingAttributes[$field])) {
+                        ProductAttribute::where('id', $existingAttributes[$field])->update($data);
+                        unset($existingAttributes[$field]);
+                    } else {
+                        ProductAttribute::create($data);
+                    }
+                }
+            }
+            // ✅ Handle image attributes
+            foreach ($platforms as $platform => $features) {
+                foreach ($features as $feature) {
+                    $field = "best_protectIon_{$platform}_icon_{$feature}";
+                    if ($request->hasFile($field)) {
+                        $path = $this->uploadImage($request, $field, 'uploads');
+
+                        $data = [
+                            'product_id' => $product->id,
+                            'name' => $field,
+                            'type' => 'image',
+                            'value' => $path,
+                        ];
+
+                        if (isset($existingAttributes[$field])) {
+                            ProductAttribute::where('id', $existingAttributes[$field])->update($data);
+                            unset($existingAttributes[$field]);
+                        } else {
+                            ProductAttribute::create($data);
+                        }
+                    }
+                }
+            }  
+
+            //  if (!empty($existingAttributes)) {
+            //     ProductAttribute::whereIn('id', array_values($existingAttributes))->delete();
+            // }
+
         toastr('Updated Successfully!', 'success');
         return redirect()->route('admin.products.index');
     }

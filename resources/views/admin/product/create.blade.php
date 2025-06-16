@@ -309,7 +309,7 @@
                                 </div>
                             </div>
                          @endfor
-                     </div>
+                  </div>
                         <!-- Best Protection for iOS END -->
 
                     <!-- System Requirements: Add Form for Android & iOS -->
@@ -508,12 +508,6 @@
                                  <!-- Main FOOOTER END -->
 
 
-              
-
-                         
-
-
-                
 
                         <div class="form-group">
                             <label for="inputState">Status</label>
