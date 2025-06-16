@@ -101,6 +101,7 @@ Route::get('event/{id}/details', [EventController::class, 'details'])->name('eve
 // --commonroutes 
 
 
+Route::match(['get','post'],'vendor-register', [Commoncontroller::class, 'vendor_register'])->name('vendor-register');
 Route::get('product', [Commoncontroller::class, 'products'])->name('products_front');
 Route::get('online-store', [Commoncontroller::class, 'online_store'])->name('online_store_front');
 
@@ -316,8 +317,8 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'user', 'as' => 
     Route::get('reviews', [ReviewController::class, 'index'])->name('review.index');
 
     /** Vendor request route */
-    // Route::get('vendor-request', [UserVendorReqeustController::class, 'index'])->name('vendor-request.index');
-    // Route::post('vendor-request', [UserVendorReqeustController::class, 'create'])->name('vendor-request.create');
+    Route::get('vendor-request', [UserVendorReqeustController::class, 'index'])->name('vendor-request.index');
+    Route::post('vendor-request', [UserVendorReqeustController::class, 'create'])->name('vendor-request.create');
 
 
 

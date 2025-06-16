@@ -13,6 +13,7 @@ class Product extends Model
     {
         return $this->belongsTo(Vendor::class);
     }
+   
 
     public function category()
     {

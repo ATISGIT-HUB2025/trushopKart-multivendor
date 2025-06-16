@@ -469,7 +469,7 @@
 
                 </ul>
             </li>
-            {{-- <li
+            <li
                 class="dropdown {{ setActive([
                     'admin.vendor-requests.index',
                     'admin.customer.index',
@@ -488,16 +488,16 @@
                     <li class="{{ setActive(['admin.vendor-requests.index']) }}"><a class="nav-link"
                             href="{{ route('admin.vendor-requests.index') }}">Pending vendors</a></li>
 
-                    <li class="{{ setActive(['admin.admin-list.index']) }}"><a class="nav-link"
-                            href="{{ route('admin.admin-list.index') }}">Admin Lists</a></li>
+                    {{-- <li class="{{ setActive(['admin.admin-list.index']) }}"><a class="nav-link"
+                            href="{{ route('admin.admin-list.index') }}">Admin Lists</a></li> --}}
 
                     <li class="{{ setActive(['admin.manage-user.index']) }}"><a class="nav-link"
                             href="{{ route('admin.manage-user.index') }}">Manage user</a></li>
-                     <li class="{{ setActive(['admin.partner-requests.index']) }}"><a class="nav-link"
-                            href="{{ route('admin.partner-requests.index') }}">Partner Requests</a></li>        
+                     {{-- <li class="{{ setActive(['admin.partner-requests.index']) }}"><a class="nav-link"
+                            href="{{ route('admin.partner-requests.index') }}">Partner Requests</a></li>         --}}
 
                 </ul>
-            </li> --}}
+            </li>
 
             {{-- <li><a class="nav-link {{ setActive(['admin.subscribers.*']) }}"
                     href="{{ route('admin.subscribers.index') }}"><i class="fas fa-user-friends"></i>

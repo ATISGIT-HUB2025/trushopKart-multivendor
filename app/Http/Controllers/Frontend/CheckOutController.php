@@ -987,7 +987,7 @@ public function store_product_session(Request $request){
 
     
 
-    return response()->json(['status' => 'success']);
+    return response()->json(['status' => 'success', 'message' => 'Checkout Processing ...']);
     }
 
     // public function checkout_redeem_referral(Request $request) {

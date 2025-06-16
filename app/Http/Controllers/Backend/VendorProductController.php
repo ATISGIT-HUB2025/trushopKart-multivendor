@@ -42,10 +42,9 @@ class VendorProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+       $request->validate([
             'image' => ['required', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
-            'category' => ['required'],
             'brand' => ['required'],
             'price' => ['required'],
             'qty' => ['required'],
@@ -53,13 +52,23 @@ class VendorProductController extends Controller
             'long_description' => ['required'],
             'seo_title' => ['nullable','max:200'],
             'seo_description' => ['nullable','max:250'],
-            'status' => ['required']
+            'status' => ['required'],
+            'book_sample' => ['nullable', 'mimes:pdf', 'max:10000'] // max 10MB
         ]);
 
-        /** Handle the image upload */
+          /** Handle the image upload */
         $imagePath = $this->uploadImage($request, 'image', 'uploads');
 
+
+
         $product = new Product();
+
+                    // Handle PDF upload
+    if($request->hasFile('book_sample')){
+        $pdf = $request->book_sample;
+        $pdfPath = $pdf->store('uploads/book-samples', 'public');
+        $product->book_sample = $pdfPath;
+    }
         $product->thumb_image = $imagePath;
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
@@ -77,15 +86,22 @@ class VendorProductController extends Controller
         $product->offer_price = $request->offer_price;
         $product->offer_start_date = $request->offer_start_date;
         $product->offer_end_date = $request->offer_end_date;
-        $product->product_type = $request->product_type;
+        $product->product_type = $request->product_type ?? null;
         $product->status = $request->status;
         $product->is_approved = 0;
         $product->seo_title = $request->seo_title;
         $product->seo_description = $request->seo_description;
+        $product->android_desc = $request->android_desc;
+        $product->ios_desc = $request->ios_desc;
+        $product->product_key = $request->product_key;
+        $product->coin_price = $request->coin_price;
+        $product->referral_points_max_use = $request->referral_points_max_use;
+        // $product->app_store_link = $request->app_store_link;
+        // $product->play_store_link = $request->play_store_link;
         $product->save();
 
-        toastr('Created Successfully!', 'success');
-
+            toastr('Created Successfully!', 'success');
+       
         return redirect()->route('vendor.products.index');
 
     }
@@ -134,7 +150,6 @@ class VendorProductController extends Controller
         $request->validate([
             'image' => ['nullable', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
-            'category' => ['required'],
             'brand' => ['required'],
             'price' => ['required'],
             'qty' => ['required'],
@@ -144,20 +159,13 @@ class VendorProductController extends Controller
             'seo_description' => ['nullable','max:250'],
             'status' => ['required']
         ]);
-
         $product = Product::findOrFail($id);
-
-        if($product->vendor_id != Auth::user()->vendor->id){
-            abort(404);
-        }
-
         /** Handle the image upload */
         $imagePath = $this->updateImage($request, 'image', 'uploads', $product->thumb_image);
 
         $product->thumb_image = empty(!$imagePath) ? $imagePath : $product->thumb_image;
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
-        $product->vendor_id = Auth::user()->vendor->id;
         $product->category_id = $request->category;
         $product->sub_category_id = $request->sub_category;
         $product->child_category_id = $request->child_category;
@@ -173,13 +181,18 @@ class VendorProductController extends Controller
         $product->offer_end_date = $request->offer_end_date;
         $product->product_type = $request->product_type;
         $product->status = $request->status;
-        $product->is_approved = $product->is_approved;
         $product->seo_title = $request->seo_title;
         $product->seo_description = $request->seo_description;
+        $product->android_desc = $request->android_desc;
+        $product->ios_desc = $request->ios_desc;
+        $product->product_key = $request->product_key;
+        $product->coin_price = $request->coin_price;
+        $product->referral_points_max_use = $request->referral_points_max_use;
+        // $product->app_store_link = $request->app_store_link;
+        // $product->play_store_link = $request->play_store_link;
         $product->save();
-
         toastr('Updated Successfully!', 'success');
-
+       
         return redirect()->route('vendor.products.index');
 
     }

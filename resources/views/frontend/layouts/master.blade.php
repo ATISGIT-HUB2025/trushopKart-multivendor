@@ -50,6 +50,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('fronttheme') }}/css/styles.css?v=2.1122" />
 
 
+    <style>
+        nav.wsus__main_menu.d-none.d-lg-block.menu_fix {
+    z-index: 1111;
+}
+    </style>
 
 </head>
 

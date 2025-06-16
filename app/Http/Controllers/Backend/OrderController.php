@@ -227,11 +227,7 @@ public function changePaymentStatus(Request $request)
         }
     }
     
-    
-
-   
     $order->save();
-
     return response(['status' => 'success', 'message' => 'Updated Payment Status Successfully']);
 }
 

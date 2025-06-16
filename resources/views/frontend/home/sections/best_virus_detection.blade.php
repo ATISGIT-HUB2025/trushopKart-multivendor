@@ -1,3 +1,46 @@
+<!-- SELLER PRODUCTS -->
+<section
+  class="s-banner-colection banner-cls-mega-electric style-abs-2 flat-spacing-3"
+>
+  <div class="container">
+    <div class="banner-content">
+      <div class="image">
+        <img
+          src="{{ url('fronttheme') }}/images/banner/2.jpg"
+          alt="Seller Products Banner"
+          class="lazyload"
+        />
+      </div>
+      <div class="box-content text-center">
+        <div class="box-title-banner wow fadeInUp">
+          <h3
+            class="title text-info fw-normal fst-italic font-3 letter-0 md-px-0"
+          >
+            SELLER PRODUCTS
+          </h3>
+          <p class="sub text-sm text-white">
+            Discover a wide range of products brought to you by trusted sellers across the platform. From electronics to daily essentials, sellers offer quality items at competitive prices, ensuring satisfaction and value for money.
+          </p>
+          <p class="sub text-sm text-white">
+            Browse top-rated seller collections, enjoy seasonal deals, and support small businesses. Our seller products are hand-picked to ensure authenticity, reliability, and excellent customer reviews.
+          </p>
+        </div>
+        <div class="box-btn-banner wow fadeInUp">
+          <a
+            href="/products"
+            class="common_btn button_yy"
+          >
+            <span class="text-white">
+              View All Seller Products
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /SELLER PRODUCTS -->
+
 <!--    Best virus detection rate 5 YEARS IN A ROW -->
       <section class="flat-spacing-30 section-results pb-0 bg-white">
         <div class="container">

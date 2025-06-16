@@ -19,14 +19,23 @@ class VendorController extends Controller
         
         $today = Carbon::today();
         
-        // Total Orders
-        $totalOrders = Order::where('user_id', $userId)->count();
+     
         
         // Today's Orders
-        $todaysOrders = Order::where('user_id', $userId)
-            ->whereDate('created_at', $today)
-            ->count();
 
+       $vendorId = Auth::user()->vendor->id;
+
+    $todaysOrders = Order::whereHas('product', function ($query) use ($vendorId) {
+        $query->where('vendor_id', $vendorId);
+    })
+    ->whereDate('created_at', $today)
+    ->count();
+
+       // Total Orders
+        $totalOrders = Order::whereHas('product', function ($query) use ($vendorId) {
+        $query->where('vendor_id', $vendorId);
+    })->count();
+    
             
             $todaysEarnings = Order::where('user_id', $userId)
             ->where('payment_status', 1)
@@ -34,22 +43,25 @@ class VendorController extends Controller
             ->sum('amount');
         
         // Pending Orders (assuming 'pending' is the status value)
-        $pendingOrders = Order::where('user_id', $userId)
+       
+        $pendingOrders = Order::whereHas('product', function ($query) use ($vendorId) {
+        $query->where('vendor_id', $vendorId);
+    })
             ->where('order_status', 'pending')
             ->count();
 
-        $todaysOrder = Order::whereDate('created_at', Carbon::today())->whereHas('orderProducts', function($query){
-            $query->where('vendor_id', Auth::user()->vendor->id);
-        })->count();
+        $todaysOrder = Order::whereDate('created_at', Carbon::today())->whereHas('product', function ($query) use ($vendorId) {
+        $query->where('vendor_id', $vendorId);
+    })->count();
         
         $todaysPendingOrder = Order::whereDate('created_at', Carbon::today())
         ->where('order_status', 'pending')
         ->whereHas('orderProducts', function($query){
             $query->where('vendor_id', Auth::user()->vendor->id);
         })->count();
-        $totalOrder = Order::whereHas('orderProducts', function($query){
-            $query->where('vendor_id', Auth::user()->vendor->id);
-        })->count();
+        $totalOrder = Order::whereHas('product', function ($query) use ($vendorId) {
+        $query->where('vendor_id', $vendorId);
+    })->count();
         $totalPendingOrder = Order::where('order_status', 'pending')
         ->whereHas('orderProducts', function($query){
             $query->where('vendor_id', Auth::user()->vendor->id);

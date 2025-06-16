@@ -27,6 +27,11 @@
     <li><a class="{{setActive(['user.application.*'])}}" href="{{route('user.application')}}"><i class="fas fa-file-signature"></i> Applycation</a></li> --}}
     {{-- <li><a class="{{setActive(['user.transctions.*'])}}" href="{{route('user.transctions')}}"><i class="fas fa-money-bill"></i> Pyment</a></li> --}}
     <li><a class="{{setActive(['user.address.*'])}}" href="{{route('user.address.index')}}"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
+   {{-- @if (auth()->user()->role !== 'vendor')
+    <li><a class="{{setActive(['user.vendor-request.index'])}}" href="{{route('user.vendor-request.index')}}"><i class="fas fa-user"></i> Become A Vendor</a></li>
+    
+    @endif --}}
+
     {{-- <li><a class="" href=""><i class="fas fa-trophy"></i> Merit List</a></li> --}}
     
     @if(auth()->user()->unique_id)

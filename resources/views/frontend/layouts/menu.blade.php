@@ -116,10 +116,12 @@ $query->where('status', 1);
             @endif
         </li>
     @endforeach
+      <li class="menu-item position-relative"><a href="/vendor-register">Become a Vendor</a></li>
 </ul>
 
 
                     <ul class="wsus__menu_item wsus__menu_item_right">
+                        {{-- <li><a href="/vendor-register">Become a Vendor</a></li> --}}
                         <li><a href="{{route('product-traking.index')}}">track order</a></li>
                         @if (auth()->check())
                         @if (auth()->user()->role === 'user')

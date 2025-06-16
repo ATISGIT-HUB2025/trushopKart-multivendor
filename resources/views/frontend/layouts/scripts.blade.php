@@ -226,6 +226,9 @@ $(document).ready(function() {
         var button = $(this);
         var productId = button.data('id');
 
+
+
+        if(productId == 54){
         // Get dropdown values
         var pcCount = $('.pc-count').val();
         var validityPeriod = $('.validity-period').val();
@@ -239,6 +242,7 @@ $(document).ready(function() {
         if (validityPeriod === 'choose an option' || validityPeriod === 'Choose an option') {
             toastr.error('Please select the period of validity.');
             return;
+        }
         }
 
         // Show feedback text and disable button

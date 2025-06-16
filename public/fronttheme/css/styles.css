@@ -23440,28 +23440,24 @@ button.tf-btn.btn-out-line-dark.btn-line-orange-3.add_cart {
     min-width: 300px !important;
 }
 
-
 .sub-menu.sub-menu-style-2 {
     min-width: 300px !important;
 }
 
-
-
-.common_btn span{
+.common_btn span {
     font-weight: 600;
-    font-size:14px !important;
+    font-size: 14px !important;
 }
 
-.common_btn{
-        text-align: center;
-}
-
-
-.vvbox a.common_btn , .button_yy{
-    min-width: 170px;
+.common_btn {
     text-align: center;
 }
 
+.vvbox a.common_btn,
+.button_yy {
+    min-width: 170px;
+    text-align: center;
+}
 
 /* Basic dropdown reset */
 .menu-item {
@@ -23481,7 +23477,7 @@ button.tf-btn.btn-out-line-dark.btn-line-orange-3.add_cart {
     list-style: none;
     border-radius: 4px;
     overflow: hidden;
-        width: 100%;
+    width: 100%;
 }
 
 .custom-dropdown-menu li a {
@@ -23501,17 +23497,14 @@ button.tf-btn.btn-out-line-dark.btn-line-orange-3.add_cart {
     display: block;
 }
 
-
-
-.minerowvv ul{
+.minerowvv ul {
     display: flex;
     gap: 20px;
 }
 
-.minerowvv ul li{
-        min-width: max-content;
+.minerowvv ul li {
+    min-width: max-content;
 }
-
 
 .minerowvv .box-nav-menu .menu-item:hover > .sub-menu {
     padding: 18px 0px;
@@ -23519,4 +23512,8 @@ button.tf-btn.btn-out-line-dark.btn-line-orange-3.add_cart {
     top: 55px;
     padding: 14px 15px !important;
     border-radius: 3px;
+}
+
+nav.wsus__main_menu.d-none.d-lg-block.menu_fix {
+    z-index: 1111;
 }

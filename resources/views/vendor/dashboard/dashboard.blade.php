@@ -15,7 +15,7 @@
     <div class="col-12 mb-4">
         <div class="row g-3">
             <!-- Today's Orders -->
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="card stat-card border-0 shadow-lg">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
@@ -35,7 +35,7 @@
             </div>
 
             <!-- Pending Orders -->
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="card stat-card border-0 shadow-lg">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Total Orders -->
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="card stat-card border-0 shadow-lg">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
@@ -75,7 +75,7 @@
             </div>
 
             <!-- Today's Earnings -->
-            <div class="col-xl-3 col-md-6">
+            {{-- <div class="col-xl-4 col-md-6">
                 <div class="card stat-card border-0 shadow-lg">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

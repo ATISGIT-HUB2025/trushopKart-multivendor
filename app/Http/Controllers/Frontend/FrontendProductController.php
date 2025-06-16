@@ -10,6 +10,8 @@ use App\Models\ChildCategory;
 use App\Models\Product;
 use App\Models\ProductReview;
 use App\Models\SubCategory;
+use App\Models\Vendor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -71,13 +73,9 @@ class FrontendProductController extends Controller
                 'status' => 1,
                 'is_approved' => 1
             ])
-            ->when($request->has('range'), function($query) use ($request){
-                $price = explode(';', $request->range);
-                $from = $price[0];
-                $to = $price[1];
-
-                return $query->where('price', '>=', $from)->where('price', '<=', $to);
-            })
+             ->when($request->has('min_price') && $request->has('max_price'), function($query) use ($request) {
+        $query->whereBetween('price', [$request->min_price, $request->max_price]);
+    })
             ->paginate(12);
         }elseif($request->has('search')){
             $products = Product::where(['status' => 1, 'is_approved' => 1])
@@ -107,8 +105,16 @@ class FrontendProductController extends Controller
     public function showProduct(string $slug)
     {
         $product = Product::with(['vendor', 'category', 'productImageGalleries', 'variants', 'brand'])->where('slug', $slug)->where('status', 1)->first();
+        
+        $findvendor = Vendor::findorfail($product->vendor_id);
+
+
+        $finduser = User::findorfail($findvendor->user_id);
+
+        $addedBy = $finduser->role;
+
         $reviews = ProductReview::where('product_id', $product->id)->where('status', 1)->paginate(10);
-        return view('frontend.pages.product-detail', compact('product', 'reviews'));
+        return view('frontend.pages.product-detail', compact('product', 'reviews','addedBy'));
     }
 
     public function chageListView(Request $request)

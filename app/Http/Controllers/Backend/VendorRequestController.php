@@ -29,6 +29,7 @@ class VendorRequestController extends Controller
 
         $user = User::findOrFail($vendor->user_id);
         $user->role = 'vendor';
+        $user->status = 'active';
         $user->save();
 
         toastr('Updated successfully!', 'success', 'success');

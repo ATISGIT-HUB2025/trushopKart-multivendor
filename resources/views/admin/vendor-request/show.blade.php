@@ -24,22 +24,22 @@
                             <td>{{$vendor->user->email}}</td>
                         </tr>
                         <tr>
-                            <td>Shop Name: </td>
+                            <td>Company Name: </td>
                             <td>{{$vendor->shop_name}}</td>
                         </tr>
                         <tr>
-                            <td>Shop Email: </td>
+                            <td>Company Email: </td>
                             <td>{{$vendor->email}}</td>
 
                         </tr>
                         <tr>
-                            <td>Shop Phone: </td>
+                            <td>Company Phone: </td>
                             <td>{{$vendor->phone}}</td>
 
 
                         </tr>
                         <tr>
-                            <td>Shop Address: </td>
+                            <td>Company Address: </td>
                             <td>{{$vendor->address}}</td>
 
                         </tr>

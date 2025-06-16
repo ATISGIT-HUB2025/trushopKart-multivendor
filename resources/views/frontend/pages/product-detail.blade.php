@@ -50,7 +50,8 @@
 
 @endsection
 
-<!--==========================
+
+  <!--==========================
       PRODUCT MODAL VIEW START
     ===========================-->
     <section class="product_popup_modal">
@@ -310,6 +311,9 @@
                                 </div> --}}
 
 
+                                @if ($product->id == 54)
+                                  
+                                
                                   <div class="row">
                                       <div class="col-lg-6">
                                           <div class="variant-picker-label">
@@ -333,11 +337,13 @@
 
                                  </div>
 
+                                 @endif
+
                                 <ul class="wsus__button_area mt-3 mt-sm-3">
                                     {{-- <li><button type="submit" class="add_cart" href="#">add to cart</button></li> --}}
                                    
                                       <li class="">
-                                        <button type="button" class="purchasenowbutton common_btn button_yy me-3" data-id="{{ $product->id }}">
+                                        <button type="button"  class="purchasenowbutton common_btn button_yy me-3" data-id="{{ $product->id }}">
                                           Purchase Now
                                         </button>
                                       </li>

@@ -38,6 +38,9 @@ class VendorOrderDataTable extends DataTable
             ->addColumn('date', function($query){
                 return date('d-M-Y', strtotime($query->created_at));
             })
+            ->addColumn('payment_method', function($query){
+                return $query->payment_method == "inr" ? "INR" : $query->payment_method;
+            })
             ->addColumn('payment_status', function($query){
                 if($query->payment_status === 1){
                     return "<span class='badge bg-success'>complete</span>";
@@ -83,7 +86,7 @@ class VendorOrderDataTable extends DataTable
      */
     public function query(Order $model): QueryBuilder
     {
-        return $model::whereHas('orderProducts', function($query){
+        return $model::whereHas('product', function($query){
             $query->where('vendor_id', Auth::user()->vendor->id);
         })->newQuery();
     }

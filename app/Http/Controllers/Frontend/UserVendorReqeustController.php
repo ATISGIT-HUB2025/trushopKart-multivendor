@@ -36,9 +36,8 @@ class UserVendorReqeustController extends Controller
 
         $imagePath = $this->uploadImage($request, 'shop_image', 'uploads');
 
-
         $vendor = new Vendor();
-
+        
         $vendor->banner = $imagePath;
         $vendor->phone = $request->shop_phone;
         $vendor->email = $request->shop_email;

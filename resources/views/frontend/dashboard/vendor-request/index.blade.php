@@ -28,33 +28,33 @@
                         @csrf
                         <div class="wsus__dash_pro_single">
                             <i class="fas fa-user-tie" aria-hidden="true"></i>
-                            <input type="file" name="shop_image" placeholder="Shop Banner Image">
+                            <input type="file" name="shop_image" required placeholder="Company Banner Image">
                         </div>
                         <div class="wsus__dash_pro_single">
                             <i class="fas fa-user-tie" aria-hidden="true"></i>
-                            <input type="text" name="shop_name" placeholder="Shop Name">
+                            <input type="text" name="shop_name" required placeholder="Company Name">
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="wsus__dash_pro_single">
                                     <i class="fas fa-user-tie" aria-hidden="true"></i>
-                                    <input type="text" name="shop_email" placeholder="Shop Email">
+                                    <input type="text" name="shop_email" required placeholder="Company Email">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="wsus__dash_pro_single">
                                     <i class="fas fa-user-tie" aria-hidden="true"></i>
-                                    <input type="text" name="shop_phone" placeholder="Shop Phone">
+                                    <input type="text" name="shop_phone" required placeholder="Company Phone">
                                 </div>
                             </div>
                         </div>
                         <div class="wsus__dash_pro_single">
                             <i class="fas fa-user-tie" aria-hidden="true"></i>
-                            <input type="text" name="shop_address" placeholder="Shop Address">
+                            <input type="text" name="shop_address" required placeholder="Company Address">
                         </div>
 
                         <div class="wsus__dash_pro_single">
-                            <textarea name="about" placeholder="About You"></textarea>
+                            <textarea name="about" required  placeholder="About You"></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>

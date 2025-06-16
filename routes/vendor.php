@@ -66,7 +66,8 @@ Route::put('products-variant-item-status', [VendorProductVariantItemController::
 Route::get('orders', [VendorOrderController::class, 'index'])->name('orders.index');
 Route::get('orders/show/{id}', [VendorOrderController::class, 'show'])->name('orders.show');
 Route::get('orders/status/{id}', [VendorOrderController::class, 'orderStatus'])->name('orders.status');
+Route::get('payment-status', [VendorOrderController::class, 'changePaymentStatus'])->name('payment.status');
+Route::get('order-status', [VendorOrderController::class, 'changeOrderStatus'])->name('order.status');
 
 /** Reviews route */
 Route::get('reviews', [VendorProductReviewController::class, 'index'])->name('reviews.index');
-
