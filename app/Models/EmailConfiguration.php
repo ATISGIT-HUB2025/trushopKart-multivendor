@@ -15,6 +15,7 @@ class EmailConfiguration extends Model
         'username',
         'password',
         'port',
-        'encryption'
+        'encryption',
+        'whatsap_api_key',
     ];
 }

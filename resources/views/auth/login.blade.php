@@ -149,7 +149,9 @@ span#countdown {
         @csrf
         <div class="wsus__login_input">
             <i class="far fa-envelope"></i>
-            <input id="verify_email" name="email" type="email" placeholder="Enter Email to Get OTP">
+            <!-- <input id="verify_email" name="email" type="email" placeholder="Enter Email to Get OTP"> -->
+            <input id="verify_email" name="email" type="text" placeholder="Enter Email or Mobile Number">
+
         </div>
 
         <div class="wsus__login_input d-none" id="otp_input_box">
@@ -179,7 +181,18 @@ span#countdown {
 
         <div class="wsus__login_input">
             <i class="far fa-mobile"></i>
-            <input id="verify_phone" name="phone" type="text" placeholder="Enter Mobile Number">
+            <!-- <input id="verify_phone" name="phone" type="text" placeholder="Enter Mobile Number"> -->
+             @php
+                $phone = '';
+                foreach (Session::all() as $key => $value) {
+                    if (Str::startsWith($key, 'otp_verified_') && !Str::contains($key, 'expiry')) {
+                        $phone = Str::after($key, 'otp_verified_');
+                    }
+                }
+            @endphp
+
+            <input id="verify_phone" name="phone" type="text" placeholder="Enter Mobile Number" value="{{ $phone }}" disable>
+
         </div>
         
         <div class="wsus__login_input parent_form_group">
