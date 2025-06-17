@@ -3,7 +3,14 @@
 {{$settings->site_name}} || Home
 @endsection
 
+
 @section('content')
+
+@section('headerLinks')
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+  @endsection
 
 
 <style>

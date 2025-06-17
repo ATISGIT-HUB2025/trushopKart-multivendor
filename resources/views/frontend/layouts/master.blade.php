@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="{{asset('frontend/css/rtl.css')}}">
     @endif
 
-
+  
     @yield('headerLinks')
 
     <link rel="stylesheet" type="text/css" href="{{ asset('fronttheme') }}/css/styles.css?v=2.1122" />
@@ -53,6 +53,26 @@
     <style>
         nav.wsus__main_menu.d-none.d-lg-block.menu_fix {
     z-index: 1111;
+}
+ .seller-slider .slick-slide {
+    padding: 0 10px; /* horizontal space between slides */
+    box-sizing: border-box;
+  }
+
+  .seller-slider {
+    margin: 0 -10px; /* to cancel padding overflow */
+  }
+
+  .seller-slider .product-box {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .slick-track {
+    margin-left: unset;
 }
     </style>
 

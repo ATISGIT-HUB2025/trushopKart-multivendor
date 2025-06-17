@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Backend;
 use App\DataTables\VendorOrderDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class VendorOrderController extends Controller
 {
@@ -32,6 +34,8 @@ class VendorOrderController extends Controller
     
 public function changePaymentStatus(Request $request)
 {
+    
+    
     $order = Order::with('transaction')->findOrFail($request->id);
     $order->payment_status = $request->status;
 

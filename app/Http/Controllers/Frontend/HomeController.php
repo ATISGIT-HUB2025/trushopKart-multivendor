@@ -21,6 +21,17 @@ class HomeController extends Controller
 {
     public function index()
     {
+
+        $sallerproducts = Product::where(['status' => 1, 'is_approved' => 1])
+    ->whereHas('vendor.user', function ($query) {
+        $query->where('role', 'vendor');
+    })
+    ->with(['vendor.user']) // optional: eager load to avoid N+1 problem
+    ->orderBy('id', 'DESC')
+    ->paginate(8);
+    
+
+
         $sliders = Slider::where('status', 1)->orderBy('serial', 'asc')->get();
         $flashSaleDate = FlashSale::first();
         $flashSaleItems = FlashSaleItem::where('show_at_home', 1)->where('status', 1)->get();
@@ -67,8 +78,8 @@ class HomeController extends Controller
                 'homepage_secion_banner_two',
                 'homepage_secion_banner_three',
                 'homepage_secion_banner_four',
-                'recentBlogs'
-
+                'recentBlogs',
+                'sallerproducts'
             ));
     }
 

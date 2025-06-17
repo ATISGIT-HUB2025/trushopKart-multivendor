@@ -294,7 +294,36 @@ $(document).ready(function() {
     });
 });
 
-
+ $(document).ready(function () {
+  $('.seller-slider').slick({
+    slidesToShow: 4, // Default to 4 boxes (25%)
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    dots: true,
+    arrows: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3 // 33.33%
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2 // 50%
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1 // 100%
+        }
+      }
+    ]
+  });
+});
 
 </script>
 

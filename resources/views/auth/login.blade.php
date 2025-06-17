@@ -149,7 +149,9 @@ span#countdown {
         @csrf
         <div class="wsus__login_input">
             <i class="far fa-envelope"></i>
-            <input id="verify_email" name="email" type="email" placeholder="Enter Email to Get OTP">
+            <!-- <input id="verify_email" name="email" type="email" placeholder="Enter Email to Get OTP"> -->
+            <input id="verify_email" name="email" type="number" placeholder="Mobile Number">
+
         </div>
 
         <div class="wsus__login_input d-none" id="otp_input_box">
@@ -178,8 +180,19 @@ span#countdown {
         </div>
 
         <div class="wsus__login_input">
-            <i class="far fa-mobile"></i>
-            <input id="verify_phone" name="phone" type="text" placeholder="Enter Mobile Number">
+            <i class="far fa-envelope"></i>
+            <!-- <input id="verify_phone" name="phone" type="text" placeholder="Enter Mobile Number"> -->
+             @php
+                $phone = '';
+                foreach (Session::all() as $key => $value) {
+                    if (Str::startsWith($key, 'otp_verified_') && !Str::contains($key, 'expiry')) {
+                        $phone = Str::after($key, 'otp_verified_');
+                    }
+                }
+            @endphp
+
+            <input id="verify_phone" name="email_c_phone" type="email" placeholder="Enter Email" value="" >
+
         </div>
         
         <div class="wsus__login_input parent_form_group">
@@ -488,12 +501,10 @@ registerForm.addEventListener('submit', function (e) {
     // Send OTP
     sendOtpBtn.addEventListener('click', function() {
         const email = emailInput.value;
-        
         if (!email) {
-            toastr.error("Please enter an email.");
+            toastr.error("Please enter an Mobile Number.");
             return;
         }
-
         otpLoader.classList.remove('d-none');
         otpLoader.textContent = "Sending OTP...";
 

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::create('licensingagreements', function (Blueprint $table) {
-        //     $table->id();
-        //      $table->text('title')->nullable();
-        //      $table->boolean('status')->default(1);
-        //     $table->timestamps();
-        // });
+        Schema::table('email_configurations', function (Blueprint $table) {
+           $table->string('whatsap_api_key')->nullable()->after('encryption'); 
+        });
     }
 
     /**
@@ -24,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('licensingagreements');
+        Schema::table('email_configurations', function (Blueprint $table) {
+                       $table->dropColumn('whatsap_api_key');
+
+        });
     }
 };

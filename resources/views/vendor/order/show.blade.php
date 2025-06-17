@@ -273,7 +273,7 @@ $('#payment_status').on('change', function () {
 
     $.ajax({
         method: 'GET',
-        url: "{{ route('admin.payment.status') }}",
+        url: "{{ route('vendor.payment.status') }}",
         data: { status: status, id: id },
         success: function (data) {
             if (data.status === 'success') {
