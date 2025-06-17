@@ -133,7 +133,6 @@
                                 </div>
                             </div>
                         </div>
-
                         
                   <div class="row">
                          <div class="col-md-4">
@@ -309,7 +308,7 @@
                                 </div>
                             </div>
                          @endfor
-                     </div>
+                  </div>
                         <!-- Best Protection for iOS END -->
 
                     <!-- System Requirements: Add Form for Android & iOS -->
@@ -508,12 +507,6 @@
                                  <!-- Main FOOOTER END -->
 
 
-              
-
-                         
-
-
-                
 
                         <div class="form-group">
                             <label for="inputState">Status</label>
