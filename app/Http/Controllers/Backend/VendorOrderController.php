@@ -60,8 +60,6 @@ public function changePaymentStatus(Request $request)
                 Mail::send('mail.orderupdate', $data, function ($message) use ($email) {
                     $message->to($email)->subject('Your recent order update');
                 });
-                
-          
         }
     }
     
@@ -92,4 +90,39 @@ public function changePaymentStatus(Request $request)
 
         return redirect()->back();
     }
+
+    public function updateShippingInfo(Request $request)
+{
+    $request->validate([
+        'order_id' => 'required|exists:orders,id',
+        'address_line1' => 'required|string',
+        'city' => 'required|string',
+        'state' => 'required|string',
+        'postal_code' => 'required|string',
+        'country' => 'required|string',
+        'shipping_method' => 'required|string',
+    ]);
+
+    $order = Order::findOrFail($request->order_id);
+
+    $shippingData = [
+        'address_line1' => $request->address_line1,
+        'address_line2' => $request->address_line2,
+        'landmark' => $request->landmark,
+        'city' => $request->city,
+        'state' => $request->state,
+        'postal_code' => $request->postal_code,
+        'country' => $request->country,
+        'shipping_method' => $request->shipping_method,
+    ];
+
+    $order->shipping_details_vendor = json_encode($shippingData);
+    $order->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Shipping information updated successfully!',
+    ]);
+}
+
 }

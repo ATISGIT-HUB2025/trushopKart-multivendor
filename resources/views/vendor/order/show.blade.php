@@ -48,17 +48,17 @@
                     </div>
                     <hr>
                     <div class="row">
-                      <div class="col-md-6">
-                        <address>
-                          <strong>Billed To:</strong><br>
-                            <b>Name:</b> {{$address->name}}<br>
-                            <b>Email: </b> {{$address->email}}<br>
-                            <b>Phone:</b> {{$address->phone}}<br>
-                            <b>Address:</b> {{$address->address}},<br>
-                            {{$address->city}}, {{$address->state}}, {{$address->zip}}<br>
-                            {{$address->country}}
-                        </address>
-                      </div>
+                      <!--<div class="col-md-6">-->
+                      <!--  <address>-->
+                      <!--    <strong>Billed To:</strong><br>-->
+                      <!--      <b>Name:</b> {{$address->name}}<br>-->
+                      <!--      <b>Email: </b> {{$address->email}}<br>-->
+                      <!--      <b>Phone:</b> {{$address->phone}}<br>-->
+                      <!--      <b>Address:</b> {{$address->address}},<br>-->
+                      <!--      {{$address->city}}, {{$address->state}}, {{$address->zip}}<br>-->
+                      <!--      {{$address->country}}-->
+                      <!--  </address>-->
+                      <!--</div>-->
                       <div class="col-md-6 text-md-right">
                         <address>
                             <strong>Billed To:</strong><br>
@@ -212,6 +212,10 @@
                 </div>
               </div>
               <hr>
+              <button type="button" class="btn btn-warning btn-icon icon-left mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              <span class="text-white">Update Shipping Details</span>
+              </button>
+
               <div class="text-md-right">
                 <button class="btn btn-warning btn-icon icon-left print_invoice"><i class="fas fa-print"></i> Print</button>
               </div>
@@ -228,6 +232,93 @@
     <!--=============================
         DASHBOARD START
       ==============================-->
+
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Update Order Shipping Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+ @php
+  $shipping = json_decode($order->shipping_details_vendor, true) ?? [];
+@endphp
+
+<form id="shipping-info-form" method="POST">
+  @csrf
+  <input type="hidden" name="order_id" value="{{ $order->id }}">
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="address_line1" class="form-label">Address Line 1</label>
+      <input type="text" class="form-control" id="address_line1" name="address_line1"
+             placeholder="House No, Street"
+             value="{{ $shipping['address_line1'] ?? '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label for="address_line2" class="form-label">Address Line 2</label>
+      <input type="text" class="form-control" id="address_line2" name="address_line2"
+             placeholder="Apartment, suite, etc."
+             value="{{ $shipping['address_line2'] ?? '' }}">
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="landmark" class="form-label">Landmark</label>
+      <input type="text" class="form-control" id="landmark" name="landmark"
+             placeholder="Near temple, park, etc."
+             value="{{ $shipping['landmark'] ?? '' }}">
+    </div>
+    <div class="col-md-6">
+      <label for="city" class="form-label">City</label>
+      <input type="text" class="form-control" id="city" name="city"
+             value="{{ $shipping['city'] ?? '' }}" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="state" class="form-label">State</label>
+      <input type="text" class="form-control" id="state" name="state"
+             value="{{ $shipping['state'] ?? '' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label for="postal_code" class="form-label">Postal Code</label>
+      <input type="text" class="form-control" id="postal_code" name="postal_code"
+             value="{{ $shipping['postal_code'] ?? '' }}" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="country" class="form-label">Country</label>
+      <input type="text" class="form-control" id="country" name="country"
+             value="{{ $shipping['country'] ?? 'India' }}" required>
+    </div>
+    <div class="col-md-6">
+      <label for="shipping_method" class="form-label">Shipping Method</label>
+      <select class="form-select" id="shipping_method" name="shipping_method">
+        <option value="Standard" {{ ($shipping['shipping_method'] ?? '') === 'Standard' ? 'selected' : '' }}>Standard</option>
+        <option value="Express" {{ ($shipping['shipping_method'] ?? '') === 'Express' ? 'selected' : '' }}>Express</option>
+        <option value="Pickup" {{ ($shipping['shipping_method'] ?? '') === 'Pickup' ? 'selected' : '' }}>Pickup</option>
+      </select>
+    </div>
+  </div>
+</form>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-warning btn-icon icon-left" form="shipping-info-form">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 @endsection
 
 @push('scripts')
@@ -314,5 +405,45 @@ $('#payment_status').on('change', function () {
 
             })
         })
+
+       $(document).ready(function () {
+  $('#shipping-info-form').on('submit', function (e) {
+    e.preventDefault();
+
+    var $form = $(this);
+    var $submitBtn = $form.find('button[type="submit"]');
+    var originalText = $submitBtn.html();
+
+    // Change button text to loading
+    $submitBtn.prop('disabled', true).html('Updating...');
+
+    $.ajax({
+      url: '{{ route("vendor.orders.updateShippingInfo") }}',
+      type: 'POST',
+      data: $form.serialize(),
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function (response) {
+        toastr.success(response.message || 'Shipping info updated successfully!');
+        $('#staticBackdrop').modal('hide');
+      },
+      error: function (xhr) {
+        let msg = "Something went wrong!";
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+          msg = xhr.responseJSON.message;
+        }
+        toastr.error(msg);
+      },
+      complete: function () {
+        // Reset button after request completes
+        $submitBtn.prop('disabled', false).html(originalText);
+      }
+    });
+  });
+});
+
+
+
     </script>
 @endpush

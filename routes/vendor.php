@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 /** Vendor Routes */
 Route::get('dashboard', [VendorController::class, 'dashboard'])->name('dashbaord');
+
+Route::match(['get','post'],'bank', [VendorProfileController::class, 'bank'])->name('bank');
 Route::get('profile', [VendorProfileController::class, 'index'])->name('profile');
 Route::put('profile', [VendorProfileController::class, 'updateProfile'])->name('profile.update'); // vendor.profile.update
 Route::post('profile', [VendorProfileController::class, 'updatePassword'])->name('profile.update.password'); // vendor.profile.update.password
@@ -68,6 +70,7 @@ Route::get('orders/show/{id}', [VendorOrderController::class, 'show'])->name('or
 Route::get('orders/status/{id}', [VendorOrderController::class, 'orderStatus'])->name('orders.status');
 Route::get('payment-status', [VendorOrderController::class, 'changePaymentStatus'])->name('payment.status');
 Route::get('order-status', [VendorOrderController::class, 'changeOrderStatus'])->name('order.status');
+Route::post('updateShippingInfo', [VendorOrderController::class, 'updateShippingInfo'])->name('orders.updateShippingInfo');
 
 /** Reviews route */
 Route::get('reviews', [VendorProductReviewController::class, 'index'])->name('reviews.index');

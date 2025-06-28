@@ -15,6 +15,8 @@ use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Str;
+use Illuminate\Validation\Rule;
+
 
 class VendorProductController extends Controller
 {
@@ -34,7 +36,8 @@ class VendorProductController extends Controller
     {
         $categories = Category::all();
         $brands = Brand::all();
-        return view('vendor.product.create', compact('categories', 'brands'));
+        $allProducts = Product::where('vendor_id', Auth::user()->vendor->id)->get();
+        return view('vendor.product.create', compact('categories', 'brands', 'allProducts'));
     }
 
     /**
@@ -46,14 +49,18 @@ class VendorProductController extends Controller
             'image' => ['required', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
             'brand' => ['required'],
-            'price' => ['required'],
+            'gst' => ['required'],
+            'mrp' => ['required'],
             'qty' => ['required'],
             'short_description' => ['required', 'max: 600'],
             'long_description' => ['required'],
             'seo_title' => ['nullable','max:200'],
             'seo_description' => ['nullable','max:250'],
             'status' => ['required'],
-            'book_sample' => ['nullable', 'mimes:pdf', 'max:10000'] // max 10MB
+            'book_sample' => ['nullable', 'mimes:pdf', 'max:10000'] ,
+             'product_mode' => ['required', 'in:single,combo'],
+        'combo_products' => [Rule::requiredIf($request->product_mode === 'combo'), 'array'],
+
         ]);
 
           /** Handle the image upload */
@@ -78,14 +85,24 @@ class VendorProductController extends Controller
         $product->child_category_id = $request->child_category;
         $product->brand_id = $request->brand;
         $product->qty = $request->qty;
+        $product->product_mode = $request->product_mode;
+        
+if ($request->product_mode === 'combo' && $request->has('combo_products')) {
+    $product->combo_items = json_encode($request->combo_products);
+} else {
+    $product->combo_items = null;
+}
         $product->short_description = $request->short_description;
         $product->long_description = $request->long_description;
         $product->video_link = $request->video_link;
         $product->sku = $request->sku;
-        $product->price = $request->price;
-        $product->offer_price = $request->offer_price;
-        $product->offer_start_date = $request->offer_start_date;
-        $product->offer_end_date = $request->offer_end_date;
+        $product->mrp = $request->mrp;
+        $product->gst = $request->gst;
+        $product->added_by = 'vendor';
+        $product->price = $request->price ?? 0;
+        $product->offer_price = $request->offer_price ?? 0;
+        // $product->offer_start_date = $request->offer_start_date;
+        // $product->offer_end_date = $request->offer_end_date;
         $product->product_type = $request->product_type ?? null;
         $product->status = $request->status;
         $product->is_approved = 0;
@@ -121,6 +138,7 @@ class VendorProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
+
         /** Check if it's the owner of the product */
         if($product->vendor_id != Auth::user()->vendor->id){
             abort(404);
@@ -130,14 +148,16 @@ class VendorProductController extends Controller
         $childCategories = ChildCategory::where('sub_category_id', $product->sub_category_id)->get();
         $categories = Category::all();
         $brands = Brand::all();
-
+        $combo_Products = json_decode($product->combo_items, true);
+        $allProducts = Product::where('id', '!=', $id)->where('vendor_id', Auth::user()->vendor->id)->get();
         return view('vendor.product.edit',
         compact(
             'product',
             'subCategories',
             'childCategories',
             'categories',
-            'brands'
+            'brands',
+            'allProducts'
         ));
     }
 
@@ -151,13 +171,18 @@ class VendorProductController extends Controller
             'image' => ['nullable', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
             'brand' => ['required'],
-            'price' => ['required'],
+            'mrp' => ['required'],
             'qty' => ['required'],
             'short_description' => ['required', 'max: 600'],
             'long_description' => ['required'],
             'seo_title' => ['nullable','max:200'],
             'seo_description' => ['nullable','max:250'],
-            'status' => ['required']
+            'status' => ['required'],
+            'product_mode' => ['required', 'in:single,combo'],
+    'combo_products' => [
+        Rule::requiredIf($request->product_mode === 'combo'),
+        'array'
+    ],
         ]);
         $product = Product::findOrFail($id);
         /** Handle the image upload */
@@ -175,10 +200,16 @@ class VendorProductController extends Controller
         $product->long_description = $request->long_description;
         $product->video_link = $request->video_link;
         $product->sku = $request->sku;
-        $product->price = $request->price;
-        $product->offer_price = $request->offer_price;
-        $product->offer_start_date = $request->offer_start_date;
-        $product->offer_end_date = $request->offer_end_date;
+        $product->mrp = $request->mrp;
+        $product->added_by = 'vendor';
+        $product->price = $request->price ?? null;
+        $product->offer_price = $request->offer_price ?? null;
+         // $product->offer_start_date = $request->offer_start_date;
+        // $product->offer_end_date = $request->offer_end_date;
+        $product->product_mode = $request->product_mode;
+        $product->combo_items = $request->product_mode === 'combo'
+    ? json_encode($request->combo_products)
+    : null;
         $product->product_type = $request->product_type;
         $product->status = $request->status;
         $product->seo_title = $request->seo_title;

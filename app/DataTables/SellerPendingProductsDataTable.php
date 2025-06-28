@@ -38,8 +38,22 @@ class SellerPendingProductsDataTable extends DataTable
 
             return $editBtn.$deleteBtn.$moreBtn;
         })
+        ->addColumn('mrp_with_gst', function($query) {
+    $mrp = floatval($query->mrp);
+    $gst = floatval($query->gst);
+
+    if ($gst > 0) {
+        $withGst = $mrp + ($mrp * $gst / 100);
+        return number_format($withGst, 2);
+    } else {
+        return number_format($mrp, 2);
+    }
+})
         ->addColumn('image', function($query){
             return "<img width='70px' src='".asset($query->thumb_image)."' ></img>";
+        })
+        ->addColumn('gst', function($query){
+            return $query->gst ?? 0 . '%';
         })
         ->addColumn('type', function($query){
             switch ($query->product_type) {
@@ -85,7 +99,7 @@ class SellerPendingProductsDataTable extends DataTable
             <option value='1'>Approved</option>
             </select>";
         })
-        ->rawColumns(['image', 'type', 'status', 'action', 'approve'])
+        ->rawColumns(['image', 'type', 'status', 'action', 'approve','mrp_with_gst'])
         ->setRowId('id');
 
     }
@@ -130,8 +144,10 @@ class SellerPendingProductsDataTable extends DataTable
             Column::make('vendor'),
             Column::make('image'),
             Column::make('name'),
-            Column::make('price'),
-            Column::make('type')->width(150),
+            Column::make('mrp')->title('MRP (Without GST)')->width(100),
+            Column::make('mrp_with_gst')->title('MRP With GST')->width(120),
+            Column::make('gst')->title('GST (%)')->width(120),
+            // Column::make('type')->width(150),
             Column::make('status'),
             Column::make('approve')->width(100),
             Column::computed('action')

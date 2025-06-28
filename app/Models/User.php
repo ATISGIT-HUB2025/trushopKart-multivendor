@@ -34,7 +34,8 @@ class User extends Authenticatable
         'original_password',
         'student_id',
         'refer_by',
-        'refer_code'
+        'refer_code',
+        'bank_details'
     ];
 
     /**

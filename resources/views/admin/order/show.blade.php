@@ -57,12 +57,60 @@
     <b>Amount Without GST:</b> ₹{{ number_format($order->amount / 1.18, 2) }}
 </address>
 
-<address>
-    <strong>Payment Information:</strong><br>
-    <b>Method:</b> {{ $order->payment_method }}<br>
-    <b>Transaction Id:</b> {{ @$order->transaction->transaction_id ?? 'N/A' }}<br>
-    <b>Status:</b> {{ $order->payment_status === 1 ? 'Complete' : 'Pending' }}
-</address>
+@php
+  $shipping = json_decode($order->shipping_details_vendor, true) ?? [];
+@endphp
+
+@php
+  $shipping = json_decode($order->shipping_details_vendor, true) ?? [];
+@endphp
+
+@if (!empty($shipping) && is_array($shipping))
+<div class="card border shadow-sm mt-4">
+    <div class="card-header bg-warning text-white fw-bold">
+        Vendor Shipping Information
+    </div>
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <strong>Address:</strong><br>
+                {{ $shipping['address_line1'] ?? '' }}
+                {{ isset($shipping['address_line2']) ? ', ' . $shipping['address_line2'] : '' }}
+            </div>
+            <div class="col-md-6">
+                <strong>Landmark:</strong><br>
+                {{ $shipping['landmark'] ?? '-' }}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-6 mb-2">
+                <strong>City:</strong><br>
+                {{ $shipping['city'] ?? '' }}
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>State:</strong><br>
+                {{ $shipping['state'] ?? '' }}
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>Postal Code:</strong><br>
+                {{ $shipping['postal_code'] ?? '' }}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <strong>Country:</strong><br>
+                {{ $shipping['country'] ?? '' }}
+            </div>
+            <div class="col-md-6">
+                <strong>Shipping Method:</strong><br>
+                {{ $shipping['shipping_method'] ?? '' }}
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+
 
                       </div>
                       <div class="col-md-6 text-md-right">
@@ -226,6 +274,7 @@ $('#payment_status').on('focus', function () {
     previousStatus = $(this).val(); // Save value on focus
 });
 
+var role = "{{ $role }}";
 
 $('#payment_status').on('change', function () {
     let status = $(this).val();
@@ -240,7 +289,7 @@ $('#payment_status').on('change', function () {
     $.ajax({
         method: 'GET',
         url: "{{ route('admin.payment.status') }}",
-        data: { status: status, id: id },
+        data: { status: status, id: id , role: role },
         success: function (data) {
             if (data.status === 'success') {
                 toastr.success(data.message);

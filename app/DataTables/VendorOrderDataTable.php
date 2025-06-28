@@ -42,7 +42,7 @@ class VendorOrderDataTable extends DataTable
                 return $query->payment_method == "inr" ? "INR" : $query->payment_method;
             })
             ->addColumn('payment_status', function($query){
-                if($query->payment_status === 1){
+                if($query->payment_status == 1){
                     return "<span class='badge bg-success'>complete</span>";
                 }else {
                     return "<span class='badge bg-warning'>pending</span>";

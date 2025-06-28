@@ -114,7 +114,13 @@ class FrontendProductController extends Controller
         $addedBy = $finduser->role;
 
         $reviews = ProductReview::where('product_id', $product->id)->where('status', 1)->paginate(10);
-        return view('frontend.pages.product-detail', compact('product', 'reviews','addedBy'));
+          $selectedComboProducts = json_decode($product->combo_items, true) ?? [];
+
+    // ✅ Get only the selected combo products
+    $comboProducts = Product::whereIn('id', $selectedComboProducts)->get();
+
+    return view('frontend.pages.product-detail', compact('product', 'reviews', 'addedBy', 'comboProducts'));
+                          
     }
 
     public function chageListView(Request $request)

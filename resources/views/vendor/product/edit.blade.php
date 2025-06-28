@@ -97,6 +97,84 @@
                         </div> --}}
 
                         <div class="form-group">
+                            <label>Mrp</label>
+                            <input type="text" class="form-control" required  id="mrp" name="mrp" value="{{$product->mrp ?? ''}}">
+                        </div>
+
+                        
+
+                         <div class="form-group">
+                            <label>Gst (in Percentage %)</label>
+                            <input type="text" required class="form-control" name="gst" id="gst" value="{{$product->gst ?? ''}}">
+                        </div>
+
+                        <div class="mrp_gst_output my-3">
+                            <div><strong>MRP Without GST:</strong> <span id="priceWithoutGst">--</span></div>
+                            <div><strong>MRP With GST:</strong> <span id="priceWithGst">--</span></div>
+                        </div>
+
+                            <h4 class="mb-4">Combo Product Management</h4>
+
+@php
+    $selectedComboProducts = $product->combo_products ?? []; // assuming it's array or use json_decode
+@endphp
+
+
+@php
+    $selectedComboProducts = json_decode($product->combo_items, true) ?? []; // assuming it's array or use json_decode
+@endphp
+
+<div class="form-group">
+    <label for="product_mode"><strong>Product Mode</strong></label>
+    <select class="form-select" id="product_mode" name="product_mode">
+        <option value="single" {{ $product->product_mode === 'single' ? 'selected' : '' }}>Single</option>
+        <option value="combo" {{ $product->product_mode === 'combo' ? 'selected' : '' }}>Combo</option>
+    </select>
+</div>
+
+<!-- Combo Products Table -->
+<div class="card mt-4 mb-4 {{ $product->product_mode === 'combo' ? '' : 'd-none' }}" id="combo_products_box">
+    <div class="card-header bg-warning text-white">
+        <strong>Select Combo Products</strong>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-bordered table-hover mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th style="width: 50px;"><input type="checkbox" id="select_all_products"></th>
+                    <th>Product Name</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($allProducts as $productItem)
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   name="combo_products[]"
+                                   value="{{ $productItem->id }}"
+                                   class="combo_product_checkbox"
+                                   {{ in_array($productItem->id, $selectedComboProducts) ? 'checked' : '' }}>
+                        </td>
+                        <td>{{ $productItem->name ?? '-' }}</td>
+                        <td>
+                            @if($productItem->thumb_image)
+                                <a href="{{ asset($productItem->thumb_image) }}" target="_blank">
+                                    <img src="{{ asset($productItem->thumb_image) }}" alt="Product" width="40" height="40">
+                                </a>
+                            @else
+                                <span class="text-muted">No Image</span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+                        {{-- <div class="form-group">
                             <label>Price</label>
                             <input type="text" class="form-control" name="price" value="{{$product->price}}">
                         </div>
@@ -130,7 +208,7 @@
                                     <input type="text" class="form-control datepicker" name="offer_end_date" value="{{$product->offer_end_date}}">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group">
                             <label>Stock Quantity</label>
@@ -280,4 +358,55 @@
             })
         })
     </script>
+<script>
+$(document).ready(function () {
+    function calculateGST() {
+        let mrp = parseFloat($('#mrp').val()); // base price (without GST)
+        let gst = parseFloat($('#gst').val()); // GST %
+
+        if (!isNaN(mrp) && !isNaN(gst)) {
+            let gstAmount = (mrp * gst / 100).toFixed(2);
+            let priceWithGst = (mrp + parseFloat(gstAmount)).toFixed(2);
+
+            $('#priceWithoutGst').text(mrp.toFixed(2));
+            $('#gstAmount').text(gstAmount);
+            $('#priceWithGst').text(priceWithGst);
+        } else {
+            $('#priceWithoutGst').text('--');
+            $('#gstAmount').text('--');
+            $('#priceWithGst').text('--');
+        }
+    }
+
+    // Run when values are changed
+    $('#mrp, #gst').on('input', calculateGST);
+
+    // ✅ Also run once on page load
+    calculateGST();
+});
+
+
+ $(document).ready(function () {
+
+        // When the "Select All" checkbox is clicked
+        $('#select_all_products').on('change', function () {
+            $('.combo_product_checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        // When any individual checkbox is clicked
+        $('.combo_product_checkbox').on('change', function () {
+            const total = $('.combo_product_checkbox').length;
+            const checked = $('.combo_product_checkbox:checked').length;
+
+            $('#select_all_products').prop('checked', total === checked);
+        });
+
+        // Auto-check "Select All" on page load if all are already selected
+        const total = $('.combo_product_checkbox').length;
+        const checked = $('.combo_product_checkbox:checked').length;
+        $('#select_all_products').prop('checked', total > 0 && total === checked);
+    });
+
+</script>
+
 @endpush

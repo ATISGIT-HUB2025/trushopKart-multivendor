@@ -37,10 +37,22 @@ class VendorListDataTable extends DataTable
                 }
                 return $button;
             })
+            ->addColumn('action', function($query){
+    // Status toggle switch
+    // Combined View & Manage button
+    $button = '<a href="/admin/vendor-view/'.$query->id.'" 
+        class="btn btn-sm btn-dark" 
+        title="View & Manage Vendor">
+        <i class="fas fa-user-cog"></i> View Info
+    </a>';
+
+    return  $button;
+})
+
             ->addColumn('shop_name', function($query){
                 return $query->vendor->shop_name;
             })
-            ->rawColumns(['status'])
+            ->rawColumns(['status','action'])
             ->setRowId('id');
     }
 
@@ -86,6 +98,7 @@ class VendorListDataTable extends DataTable
             Column::make('shop_name'),
             Column::make('role'),
             Column::make('status'),
+            Column::make('action'),
         ];
     }
 

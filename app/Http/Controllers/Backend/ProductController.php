@@ -50,7 +50,7 @@ class ProductController extends Controller
         $request->validate([
             'image' => ['required', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
-            'category' => ['required'],
+            // 'category' => ['required'],
             'brand' => ['required'],
             'price' => ['required'],
             'qty' => ['required'],
@@ -262,7 +262,7 @@ class ProductController extends Controller
         $request->validate([
             'image' => ['nullable', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
-            'category' => ['required'],
+            // 'category' => ['required'],
             'brand' => ['required'],
             'price' => ['required'],
             'qty' => ['required'],

@@ -33,9 +33,18 @@
   <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}">
   <link rel="stylesheet" href="{{asset('frontend/css/responsive.css')}}">
   <!-- <link rel="stylesheet" href="css/rtl.css"> -->
+
+  @yield('styles')
+
 </head>
 
 <body>
+
+  <style>
+    .fl-main-container .fl-container.fl-flasher .fl-message {
+    color: #fff;
+  }
+  </style>
 
 
   <!--=============================
@@ -200,6 +209,8 @@
     </script>
 
   @stack('scripts')
+
+  @yield('scripts')
 </body>
 
 </html>

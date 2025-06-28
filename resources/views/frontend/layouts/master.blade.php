@@ -74,6 +74,10 @@
   .slick-track {
     margin-left: unset;
 }
+
+.fl-main-container .fl-container.fl-flasher .fl-message{
+    color: #fff;
+}
     </style>
 
 </head>

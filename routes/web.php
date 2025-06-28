@@ -101,7 +101,10 @@ Route::get('event/{id}/details', [EventController::class, 'details'])->name('eve
 // --commonroutes 
 
 
+Route::match(['get','post'],'send-otp-email', [Commoncontroller::class, 'send_otp_email'])->name('send_otp_email');
 Route::match(['get','post'],'vendor-register', [Commoncontroller::class, 'vendor_register'])->name('vendor-register');
+Route::match(['post'],'vendor-send-otp', [Commoncontroller::class, 'vendor_send_otp'])->name('vendor_send_otp');
+Route::match(['post'],'vendor-verify-otp', [Commoncontroller::class, 'vendor_verify_otp'])->name('vendor_verify_otp');
 Route::get('product', [Commoncontroller::class, 'products'])->name('products_front');
 Route::get('online-store', [Commoncontroller::class, 'online_store'])->name('online_store_front');
 

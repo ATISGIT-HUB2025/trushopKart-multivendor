@@ -13,6 +13,7 @@ use App\DataTables\shippedOrderDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 class OrderController extends Controller
@@ -64,7 +65,25 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order = Order::findOrFail($id);
-        return view('admin.order.show', compact('order'));
+
+        $productId = $order->product_id;
+        $product = Product::findOrFail($productId);
+
+        $vendorId = $product->vendor_id;
+        
+        $vendor = \App\Models\Vendor::findOrFail($vendorId);
+        
+       
+        
+        $user = \App\Models\User::findOrFail($vendor->user_id);
+       
+        //  echo "<pre>";
+        // print_r($user);
+        // die;
+        
+        $role = $user->role ?? "admin";
+
+        return view('admin.order.show', compact('order','role', 'product', 'vendor', 'user'));
     }
 
     /**
@@ -181,6 +200,7 @@ class OrderController extends Controller
 
 public function changePaymentStatus(Request $request)
 {
+    $role = $request->role;
     $order = Order::with('transaction')->findOrFail($request->id);
     $order->payment_status = $request->status;
 
@@ -192,31 +212,48 @@ public function changePaymentStatus(Request $request)
             $product = Product::find($order->product_id);
 
             // 🔍 Get 1 unassigned licence key
+            
+            if($product->id == 54){
             $licenceKey = \App\Models\ProductLicenceKey::where('product_id', $product->id)
                             ->where('assigned', "N")
                             ->first();
+            }else{
+                $licenceKey = "1";
+            }
 
             if ($licenceKey) {
                 // ✅ Assign the licence key to this user
-                $licenceKey->assigned = "Y";
+                if($product->id == 54){
+                    $licenceKey->assigned = "Y";
                 $licenceKey->assigned_user = $order->user_id;
                 $licenceKey->save();
-
+                }
+                
                 // 📧 Prepare data for email
                 $data = [
                     'name' => $userAddress['name'] ?? 'Customer',
                     'product_name' => $product->name ?? 'Your Product',
-                    'licence_key' => $licenceKey->product_key, // 👈 Use this assigned key
+                    'licence_key' => $licenceKey->product_key ?? "", // 👈 Use this assigned key
                     'order' => $order,
                     'address' => (object) $userAddress,
                 ];
                 
+                if($product->id == 54){
                  $order->license_key =  $licenceKey->product_key ?? null;
-                 $order->order_status =  "delivered";
-
-                Mail::send('mail.license_key', $data, function ($message) use ($email) {
+                }
+                 if($role == "admin"){
+                     Mail::send('mail.license_key', $data, function ($message) use ($email) {
                     $message->to($email)->subject('Your Product License Key & Invoice');
                 });
+                 $order->order_status =  "delivered";
+                 }else{
+                    $order->order_status =  "shipped";
+                     Mail::send('mail.orderupdate', $data, function ($message) use ($email) {
+                    $message->to($email)->subject('Your recent order update');
+                });
+                 }
+
+               
             } else {
                 // ❗ No unassigned keys left
                 return response([

@@ -325,6 +325,27 @@ $(document).ready(function() {
   });
 });
 
+
+ document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll(".combo_product_checkbox");
+        const counter = document.getElementById("combo-selected-count");
+
+        function updateCount() {
+            const selected = document.querySelectorAll(".combo_product_checkbox:checked").length;
+            counter.textContent = `${selected} Selected`;
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", function () {
+                const parent = checkbox.closest(".combo-item");
+                parent.classList.toggle("active", checkbox.checked);
+                updateCount();
+            });
+        });
+
+        updateCount(); // Initial update
+    });
+    
 </script>
 
 

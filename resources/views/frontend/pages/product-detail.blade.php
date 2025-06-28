@@ -18,6 +18,25 @@
 .bi-check-circle::before {
     content: "" !important;
 }
+.combo-item.active {
+    background-color:#033364 !important;
+    border: 2px solid #28a745;
+    transform: scale(1.02);
+}
+
+h6.mb-1.fw-bold.text-dark.labelForcomboItems {
+      font-size: 10px;
+    line-height: normal;
+    font-weight: 400 !important;
+}
+
+.combo-item.active h6.mb-1.fw-bold.text-dark.labelForcomboItems{
+    color: #fff !important;
+}
+
+.combo-item .price_for_combo{
+    font-size: 12px;
+}
 
 </style>
 
@@ -338,6 +357,55 @@
                                  </div>
 
                                  @endif
+
+
+@php
+    $selectedComboProducts = json_decode($product->combo_items, true) ?? [];
+    $comboProducts = \App\Models\Product::whereIn('id', $selectedComboProducts)->get();
+@endphp
+
+@if($product->product_mode === 'combo')
+<div class="card mt-4 mb-4" id="combo_products_display_box">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <strong><i class="fas fa-boxes me-1"></i> Select Combo Products</strong>
+        <span class="badge bg-light text-dark" id="combo-selected-count">0 Selected</span>
+    </div>
+    <div class="card-body p-3">
+        <div class="row">
+            @foreach($comboProducts as $productItem)
+                <div class="col-md-6 mb-3">
+                    <div class="combo-item product-card border rounded p-3 shadow-sm d-flex align-items-center gap-3" style="transition: 0.3s;">
+                        <input type="checkbox"
+                               name="combo_products[]"
+                               value="{{ $productItem->id }}"
+                               id="combo_{{ $productItem->id }}"
+                               class="form-check-input combo_product_checkbox me-2">
+
+                        <label for="combo_{{ $productItem->id }}"
+                               class="d-flex align-items-center gap-3 w-100 cursor-pointer mb-0">
+                            <img src="{{ asset($productItem->thumb_image ?? 'default.png') }}"
+                                 alt="{{ $productItem->name }}"
+                                 width="60" height="60"
+                                 class="rounded border" style="object-fit: cover;">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 fw-bold text-dark labelForcomboItems">{{ $productItem->name }}</h6>
+                                <small class="text-muted"> @if (checkDiscount($product))
+                                <h4 class="price_for_combo">{{$settings->currency_icon}}{{$product->offer_price}} <del>{{$settings->currency_icon}}{{$product->price}}</del></h4>
+                            @else
+                                <h4 class="price_for_combo">{{$settings->currency_icon}}{{$product->price}}</h4>
+                            @endif</small>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
+
+
+
 
                                 <ul class="wsus__button_area mt-3 mt-sm-3">
                                     {{-- <li><button type="submit" class="add_cart" href="#">add to cart</button></li> --}}

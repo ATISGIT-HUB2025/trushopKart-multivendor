@@ -61,11 +61,69 @@
                         </div> --}}
 
                         <div class="form-group">
-                            <label>Price</label>
-                            <input type="text" class="form-control" required name="price" value="{{old('price')}}">
+                            <label>Mrp</label>
+                            <input type="text" class="form-control" required name="mrp" id="mrp" value="{{old('mrp')}}">
                         </div>
 
-                        <div class="form-group">
+                         <div class="form-group">
+                            <label>Gst (in Percentage %)</label>
+                            <input type="text" required class="form-control" name="gst" id="gst" value="{{old('gst')}}">
+                        </div>
+
+                        <div class="mrp_gst_output my-3">
+                            <div><strong>MRP Without GST:</strong> <span id="priceWithoutGst">--</span></div>
+                            <div><strong>MRP With GST:</strong> <span id="priceWithGst">--</span></div>
+                        </div>
+
+                       <h4 class="mb-4">Combo Product Management</h4>
+
+<div class="form-group">
+    <label for="product_mode"><strong>Product Mode</strong></label>
+    <select class="form-select" id="product_mode" name="product_mode">
+        <option value="single">Single</option>
+        <option value="combo">Combo</option>
+    </select>
+</div>
+
+<!-- Combo Products Table -->
+<div class="card d-none mt-4 mb-4" id="combo_products_box">
+    <div class="card-header bg-warning text-white">
+        <strong>Select Combo Products</strong>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-bordered table-hover mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th style="width: 50px;"><input type="checkbox" id="select_all_products"></th>
+                    <th>Product Name</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($allProducts as $product)
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="combo_products[]" value="{{ $product->id }}" class="combo_product_checkbox">
+                        </td>
+                        <td>{{ $product->name ?? "-" }}</td>
+                        <td>
+                            @if($product->thumb_image)
+                                <a href="{{ asset($product->thumb_image) }}" target="_blank">
+                                    <img src="{{ asset($product->thumb_image) }}" alt="Product" width="40" height="40">
+                                </a>
+                            @else
+                                <span class="text-muted">No Image</span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+                        {{-- <div class="form-group">
                             <label>MVoucher Point</label>
                             <input type="number" class="form-control" required name="coin_price" value="1">
                         </div>
@@ -73,9 +131,9 @@
                         <div class="form-group">
                             <label>Refferal Points</label>
                             <input type="number" class="form-control" required name="referral_points_max_use" value="1">
-                        </div>
+                        </div> --}}
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>Offer Price</label>
                             <input type="text" class="form-control" required name="offer_price" value="{{old('offer_price')}}">
                         </div>
@@ -93,7 +151,7 @@
                                     <input type="text" class="form-control datepicker" name="offer_end_date" value="{{old('offer_end_date')}}">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group">
                             <label>Stock Quantity</label>
@@ -172,6 +230,7 @@
   ==============================-->
 @endsection
 
+
 @push('scripts')
     <script>
         $(document).ready(function(){
@@ -220,4 +279,54 @@
             })
         })
     </script>
+
+<script>
+$(document).ready(function () {
+    function calculateGST() {
+        let mrp = parseFloat($('#mrp').val()); // base price (without GST)
+        let gst = parseFloat($('#gst').val()); // GST %
+
+        if (!isNaN(mrp) && !isNaN(gst)) {
+            let gstAmount = (mrp * gst / 100).toFixed(2);
+            let priceWithGst = (mrp + parseFloat(gstAmount)).toFixed(2);
+
+            $('#priceWithoutGst').text(mrp.toFixed(2));
+            $('#gstAmount').text(gstAmount);
+            $('#priceWithGst').text(priceWithGst);
+        } else {
+            $('#priceWithoutGst').text('--');
+            $('#gstAmount').text('--');
+            $('#priceWithGst').text('--');
+        }
+    }
+
+    // Run when values are changed
+    $('#mrp, #gst').on('input', calculateGST);
+
+    // ✅ Also run once on page load
+    calculateGST();
+});
+
+$(document).ready(function () {
+        $('#product_mode').on('change', function () {
+            if ($(this).val() === 'combo') {
+                $('#combo_products_box').removeClass('d-none');
+            } else {
+                $('#combo_products_box').addClass('d-none');
+                $('.combo_product_checkbox').prop('checked', false);
+                $('#select_all_products').prop('checked', false);
+            }
+        });
+
+        $('#select_all_products').on('change', function () {
+            $('.combo_product_checkbox').prop('checked', this.checked);
+        });
+
+        // Trigger on page load
+        $('#product_mode').trigger('change');
+    });
+    
+</script>
+
+
 @endpush

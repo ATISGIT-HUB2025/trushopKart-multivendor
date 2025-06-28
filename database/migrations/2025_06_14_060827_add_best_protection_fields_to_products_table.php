@@ -66,6 +66,8 @@ return new class extends Migration
                 'best_protectIon_ios_icon_c',
                 'best_protectIon_ios__c_title',
                 'best_protectIon_ios__c_desc',
+                'mrp',
+                'added_by',
             ]);
         });
     }

@@ -35,6 +35,17 @@ class OrderDataTable extends DataTable
             ->addColumn('amount', function($query){
                 return $query->currency_icon.$query->amount;
             })
+            ->addColumn('vendor_name', function($query){
+    return $query->product->vendor->user->name ?? '-';
+})
+            ->addColumn('admin_type', function($query){
+                if(isset($query->product->vendor->user->role)){
+    return $query->product->vendor->user->role == 'admin' ? 'Admin' : 'Vendor';
+    }else{
+            return 'N/A';
+    }
+})
+
             ->addColumn('date', function($query){
                 return date('d-M-Y', strtotime($query->created_at));
             })
@@ -90,7 +101,7 @@ class OrderDataTable extends DataTable
      */
     public function query(Order $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->latest()->newQuery();
     }
 
     /**
@@ -128,6 +139,8 @@ class OrderDataTable extends DataTable
             ->width(30)
             ->addClass('text-center'),
             Column::make('invocie_id'),
+            Column::make('vendor_name'),
+            Column::make('admin_type'),
             Column::make('customer'),
             Column::make('date'),
             Column::make('product_qty'),

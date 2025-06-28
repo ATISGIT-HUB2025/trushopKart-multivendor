@@ -351,7 +351,16 @@ Route::delete('admin-list/{id}', [AdminListController::class, 'destory'])->name(
 Route::get('manage-user', [ManageUserController::class, 'index'])->name('manage-user.index');
 Route::post('manage-user', [ManageUserController::class, 'create'])->name('manage-user.create');
 
+Route::prefix('vendor/transactions/{vendor}')->group(function () {
+    Route::post('/list', [VendorListController::class, 'fetch_transactions']);
+    Route::post('/add', [VendorListController::class, 'store_transaction']);
+});
+
 Route::get('vendor-list', [VendorListController::class, 'index'])->name('vendor-list.index');
+Route::get('vendor-view/{vendorid}', [VendorListController::class, 'viewVendorInfo'])->name('vendor-list.show');
+
+Route::post('vendor/{vendor}/sales-overview', [VendorListController::class, 'vendorSalesOverview']);
+
 Route::put('vendor-list/status-change', [VendorListController::class, 'changeStatus'])->name('vendor-list.status-change');
 
 Route::get('vendor-condition', [VendorConditionController::class, 'index'])->name('vendor-condition.index');

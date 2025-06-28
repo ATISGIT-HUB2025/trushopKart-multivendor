@@ -968,8 +968,7 @@ public function saveneworder(Request $request)
     'redeem_active', 'redeem_points', 'redeem_value',
     'referral_redeem_active', 'referral_redeem_value','mpointReedemDebit', 'rewardData'
 ]);
-
-    return redirect()->route('user.dashboard')->with('success', 'Your order has been placed successfully.');
+    return redirect('/products')->with('success', 'Your order has been placed successfully.');
 }
 
 

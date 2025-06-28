@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Support\Facades\RateLimiter as FacadesRateLimiter;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\EMailConfiguration;
 use Illuminate\Support\Facades\Http; 
 
@@ -468,10 +468,10 @@ public function sendOtp(Request $request)
 
     $isEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
     $isMobile = preg_match('/^[0-9]{10,15}$/', $email);
-    if (!$isEmail && !$isMobile) {
+    if (!$isMobile) {
         return response()->json([
             'status' => 'error',
-            'message' => 'Enter a valid email address or mobile number.',
+            'message' => 'Enter a valid mobile number.',
         ], 422);
     }
 
@@ -512,13 +512,13 @@ public function sendOtp(Request $request)
         ], 429);
     }
 
-    FacadesRateLimiter::hit($throttleKey, 60);
 
     $otp = rand(100000, 999999);
     $email = $request->email;
-
-    Session::put("email_otp_$email", $otp);
+    
     Session::put("otp_expiry_$email", now()->addMinutes(10));
+    Session::put("email_otp_$email", $otp);
+    
 
     try {
         if ($isEmail) {
@@ -534,12 +534,12 @@ public function sendOtp(Request $request)
             ]);
         } else {
            // 1. Try to get API key from DB
-            $config = EmailConfiguration::first();
+            $config = DB::table('email_configurations')->first();
             $apiKey = $config?->whatsap_api_key;
 
             // 2. Fallback to hardcoded key if DB key is empty
             if (empty($apiKey)) {
-                $apiKey = '2f233ed1a046484f9bfa0f985e4d0f0b'; // your static fallback key
+                $apiKey = '11f564bd9e86487fbea50c24113d7578'; // your static fallback key
             }
 
             // 3. Final check: if still empty, return error
@@ -568,13 +568,15 @@ public function sendOtp(Request $request)
                     'status' => 'success',
                     'message' => 'OTP sent successfully via WhatsApp.'
                 ]);
+                FacadesRateLimiter::hit($throttleKey, 60);
+
             }else{
                  return response()->json([
                     'status' => 'error',
                     'message' => $data['msg'] ?? 'Failed to send OTP via WhatsApp.',
                 ]);
 
-            }
+            }   
 
             // Any other failure
             return response()->json([
